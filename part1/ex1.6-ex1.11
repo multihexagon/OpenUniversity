@@ -1,0 +1,77 @@
+import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
+
+const Button = ({ onClick, text }) => (
+  <button onClick={onClick}>
+    {text}
+  </button>
+)
+
+const StatisticsLine = ({ text, value }) => (
+  <h3>{text} {value}</h3>
+)
+
+const Statistics = ({good, neutral, bad, total, avg}) => {
+  if (good === 0 && neutral === 0 && bad === 0){
+    return (
+      <h3>No feedback given</h3>
+    )
+  }
+  return (
+    <div>
+      <table> 
+      <thead><tr><td><h1>Statistics</h1></td></tr></thead>
+      <tbody>
+      <tr><td><StatisticsLine text='Good' value={good} /></td></tr>
+      <tr><td><StatisticsLine text='Neutral' value={neutral} /></td></tr>
+      <tr><td><StatisticsLine text='Bad' value={bad} /></td></tr>
+      <tr><td><StatisticsLine text='Total' value={total} /></td></tr>
+      <tr><td><StatisticsLine text='Average' value={avg / total} /></td></tr>
+      <tr><td><StatisticsLine text='Positive' value={(good / (total))*100} /></td></tr>
+      </tbody>
+      </table>
+
+    </div>
+  )
+}
+
+const App = () => {
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [avg, setAvg] = useState(0)
+
+
+
+  const goodReview = () => {
+    setAvg(avg + 1)
+    setGood(good + 1)
+  }
+
+  const neutralReview = () => {
+    setAvg(avg)
+    setNeutral(neutral + 1)
+  }
+
+  const badReview = () => {
+    setAvg(avg - 1)
+    setBad(bad + 1)
+  }
+
+  let total = good + neutral + bad
+  return (
+    <div>
+      <h1>Give Feedback</h1>
+      <Button onClick={goodReview} text='Good' />
+      <Button onClick={neutralReview} text='Neutral' />
+      <Button onClick={badReview} text='Bad' />
+      <br></br>
+      <Statistics good={good} neutral={neutral} bad={bad} total={total} avg={avg}/>
+    </div>
+  )
+}
+
+ReactDOM.render(
+  <App />, 
+  document.getElementById('root')
+)
